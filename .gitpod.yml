@@ -1,9 +1,16 @@
 image:
   file: .gitpod.Dockerfile
 
-ports:
-  - port: 6080
-    onOpen: open-preview
+# ports:
+#   - port: 6080
+#     onOpen: open-preview
+
+tasks:
+  - init: cd ./TestProject
+    command: ./gradlew simulateJava
+  - init: cd ./client
+    command: npm install
+    command: npm start
     
 vscode:
   extensions:
