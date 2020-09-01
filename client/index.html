@@ -2,20 +2,13 @@
 <html>
     <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <!-- <script 
-      data-nt-host="8888-a1aabeb5-9985-4fd9-9db8-50920d7a1b52.ws-us02.gitpod.io"
-      src="https://8888-a1aabeb5-9985-4fd9-9db8-50920d7a1b52.ws-us02.gitpod.io/networktables/networktables.js"
-    ></script> -->
     </head>
   <body>
-    <!-- <script>
-        const addressPart = window.location.href.substring(12, window.location.href.length - 1);
-        const dataNtHost = `8888${addressPart}`;
-        const src = `https://8888${addressPart}/networktables/networktables.js`;
-        console.log('sdfd:', dataNtHost, src);
-    </script> -->
     <frc-dashboard edit-mode address-type="gitpod">
       <frc-gyro></frc-gyro>
+      <frc-sim-robot-state></frc-sim-robot-state>
+      <frc-sim-fms></frc-sim-fms>
+
     </frc-dashboard>
     <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.min.js"></script>
   </body>
