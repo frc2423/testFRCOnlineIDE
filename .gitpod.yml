@@ -7,10 +7,10 @@ image:
 
 tasks:
   - init: cd ./TestProject
-    command: ./gradlew simulateJava
+    command: gradlew simulateJava
   - init: cd ./client
     command: npm install
-    command: npm start
+
     
 vscode:
   extensions:
