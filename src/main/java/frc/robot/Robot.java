@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-      System.out.println("auto periodic??");
+      System.out.println("auto periodic....");
       telemetryUpdate();
   }
 

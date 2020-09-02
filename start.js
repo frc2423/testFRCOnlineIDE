@@ -9,7 +9,7 @@ const { LiveStream } = require('./live-stream');
 async function getSimulationPid() {
     return new Promise(async (resolve, reject) => {
         try { 
-            resolve(await fs.readFile('/workspace/testFRCOnlineIDE/TestProject/build/pids/simulateJava.pid', 'utf8'));
+            resolve(await fs.readFile('/workspace/testFRCOnlineIDE/build/pids/simulateJava.pid', 'utf8'));
         } catch(e) {
             reject();
         }
@@ -43,7 +43,7 @@ async function start() {
     await killSimulationPid();
     await killSimulationPort();
 
-    const childProcess = spawn('./gradlew', ['simulateJava'], {cwd: './TestProject'});
+    const childProcess = spawn('./gradlew', ['simulateJava']);
     childProcess.stdout.on('data', function (data) {
         console.log('stdout: ' + data.toString());
     });
@@ -52,7 +52,7 @@ async function start() {
         console.log('stderr: ' + data.toString());
     });
 
-    const simulateLog = '/workspace/testFRCOnlineIDE/TestProject/build/stdout/simulateJava.log';
+    const simulateLog = '/workspace/testFRCOnlineIDE/build/stdout/simulateJava.log';
 
     childProcess.on('exit', function (code) {
         console.log('child process exited with code ' + code.toString());
