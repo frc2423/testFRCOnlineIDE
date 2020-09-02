@@ -10,8 +10,9 @@ ports:
   onOpen: open-browser
 
 tasks:
-  - init: cd ./TestProject
-    command: ./gradlew simulateJava
+  # - init: cd ./TestProject
+  #   command: ./gradlew simulateJava
+  - init: node start.js
   - init: cd ./client
     command: npm install; npm start
   - init: pip3 install pynetworktables2js
