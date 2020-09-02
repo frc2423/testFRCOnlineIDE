@@ -7,7 +7,13 @@ const { LiveStream } = require('./live-stream');
 // fuser -k 8080/tcp
 
 async function getSimulationPid() {
-    return await fs.readFile('/workspace/testFRCOnlineIDE/TestProject/build/pids/simulateJava.pid', 'utf8');
+    return new Promise(async (resolve, reject) => {
+        try { 
+            resolve(await fs.readFile('/workspace/testFRCOnlineIDE/TestProject/build/pids/simulateJava.pid', 'utf8'));
+        } catch(e) {
+            reject();
+        }
+    });
 }
 
 async function killSimulationPid() { 
@@ -26,7 +32,6 @@ async function killSimulationPid() {
 
 async function killSimulationPort() { 
     return new Promise(async resolve => {
-        const pid = await getSimulationPid();
         const childProcess = spawn('fuser', ['-k', '8080/tcp']);
         childProcess.on('exit', function (code) {
             resolve();
