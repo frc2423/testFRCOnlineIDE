@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 const fs = require('fs').promises;
-const { LiveStream } = require('live-stream');
+const { LiveStream } = require('./live-stream');
 
 const simulateLog = '/workspace/testFRCOnlineIDE/TestProject/build/stdout/simulateJava.log';
 

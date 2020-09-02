@@ -8,7 +8,7 @@ class LiveStream {
         this.onIncomingData = onIncomingData;
         this.file = null;
         this.readbytes = 0;
-        fs.open(fileName, 'r', (err, fd) => { 
+        fs.open(filename, 'r', (err, fd) => { 
             this.file = fd; 
             this.readsome(); 
         });
