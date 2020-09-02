@@ -2,6 +2,10 @@ const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const { LiveStream } = require('./live-stream');
 
+// delete simulateJava.log
+// kill -9 [simulation PID]
+// fuser -k 8080/tcp
+
 const simulateLog = '/workspace/testFRCOnlineIDE/TestProject/build/stdout/simulateJava.log';
 
 async function getSimulationPid() {

@@ -13,8 +13,7 @@ tasks:
   # - init: cd ./TestProject
   #   command: ./gradlew simulateJava
   - init: node start.js
-  - init: cd ./client
-    command: npm install; npm start
+  - command: cd ./client; npm install; npm start
   - init: pip3 install pynetworktables2js
     command: python3 -m pynetworktables2js
     
