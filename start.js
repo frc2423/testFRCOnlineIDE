@@ -12,11 +12,15 @@ async function getSimulationPid() {
 
 async function killSimulationPid() { 
     return new Promise(async resolve => {
-        const pid = await getSimulationPid();
-        const childProcess = spawn('kill', ['-9', pid]);
-        childProcess.on('exit', function (code) {
+        try {
+            const pid = await getSimulationPid();
+            const childProcess = spawn('kill', ['-9', pid]);
+            childProcess.on('exit', function (code) {
+                resolve();
+            }); 
+        } catch(e) {
             resolve();
-        }); 
+        }
     });
 }
 
