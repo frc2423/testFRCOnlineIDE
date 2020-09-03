@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+      System.out.println("y: " + controller.getY());
       drive.arcadeDrive(controller.getY(), controller.getX());
       telemetryUpdate();
   }
