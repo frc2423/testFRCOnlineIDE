@@ -9,9 +9,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-// import edu.wpi.first.wpilibj.PWMVictorSPX;
-// import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-// import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.Calibration.CalWrangler;
 import frc.lib.DataServer.CasseroleDataServer;
 import frc.lib.DataServer.Signal;
@@ -73,11 +73,11 @@ public class Robot extends TimedRobot {
 
         System.out.println("Robot Init completed!");
 
-        // motor1 = new PWMVictorSPX(0);
-        // motor2 = new PWMVictorSPX(0);
+        motor1 = new PWMVictorSPX(0);
+        motor2 = new PWMVictorSPX(1);
 
-        // drive = new DifferentialDrive(motor1, motor2);
-        // controller = new XboxController(0);
+        drive = new DifferentialDrive(motor1, motor2);
+        controller = new XboxController(0);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //   drive.arcadeDrive(controller.getY(), controller.getX());
+      drive.arcadeDrive(controller.getY(), controller.getX());
       telemetryUpdate();
   }
 
