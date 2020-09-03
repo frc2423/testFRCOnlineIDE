@@ -1,0 +1,22 @@
+{
+  "name": "testfrconlineide",
+  "version": "1.0.0",
+  "description": "[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/gerth2/testFRCOnlineIDE)",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frc2423/testFRCOnlineIDE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frc2423/testFRCOnlineIDE/issues"
+  },
+  "homepage": "https://github.com/frc2423/testFRCOnlineIDE#readme",
+  "dependencies": {
+    "wss": "^3.3.4"
+  }
+}

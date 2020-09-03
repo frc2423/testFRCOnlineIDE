@@ -1,10 +1,21 @@
 const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const { LiveStream } = require('./live-stream');
+const { createServer } = require('wss');
 
-// delete simulateJava.log (maybe not)
-// kill -9 [simulation PID]
-// fuser -k 8080/tcp
+function startWs2() {
+    createServer(function connectionListener (ws) {
+        ws.send('welcome!')
+        ws.on('message', (data) => {
+            console.log('received message:', data.toString());
+            ws.send("received message: " + data.toString()) // echo-server
+        })
+    })
+    .listen(8082, function () {
+        const {address, port} = this.address() // this is the http[s].Server
+        console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
+    });
+}
 
 async function getSimulationPid() {
     return new Promise(async (resolve, reject) => {
@@ -40,6 +51,10 @@ async function killSimulationPort() {
 }
 
 async function start() {
+
+    // startWs();
+    startWs2();
+
     await killSimulationPid();
     await killSimulationPort();
 
