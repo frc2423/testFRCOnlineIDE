@@ -3,18 +3,33 @@ const fs = require('fs').promises;
 const { LiveStream } = require('./live-stream');
 const { createServer } = require('wss');
 
-function startWs2() {
-    createServer(function connectionListener (ws) {
-        ws.send('welcome!')
-        ws.on('message', (data) => {
-            console.log('received message:', data.toString());
-            ws.send("received message: " + data.toString()) // echo-server
+class RobotWs {
+
+    constructor() {
+        
+        this.connections = [];
+
+        createServer(connection => {
+            connection.send('welcome!');
+            connection.on('message', (data) => {
+                console.log('received message:', data.toString());
+                // connection.send("received message: " + data.toString()) // echo-server
+            });
+            this.connections.push(connection);
         })
-    })
-    .listen(8082, function () {
-        const {address, port} = this.address() // this is the http[s].Server
-        console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
-    });
+        .listen(8082, function ()  {
+            const {address, port} = this.address() // this is the http[s].Server
+            console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
+        });
+    }
+
+    sendMessage(message) {
+        this.connections.forEach(connection => {
+            if (connection.readyState === connection.OPEN) {
+                connection.send(message);
+            }
+        });
+    }
 }
 
 async function getSimulationPid() {
@@ -53,7 +68,7 @@ async function killSimulationPort() {
 async function start() {
 
     // startWs();
-    startWs2();
+    const robotWs = new RobotWs();
 
     await killSimulationPid();
     await killSimulationPort();
@@ -72,7 +87,8 @@ async function start() {
     childProcess.on('exit', function (code) {
         console.log('child process exited with code ' + code.toString());
         const liveStream = new LiveStream(simulateLog, text => {
-            console.log('text:', text);
+            robotWs.sendMessage(text);
+            // console.log('text:', text);
         });
     });
 }

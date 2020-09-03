@@ -2,19 +2,26 @@
 <html>
   <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <style>
+        div {
+            display: flex;
+        }
+    </style>
   </head>
   <body>
-    <frc-dashboard edit-mode address-type="gitpod">
-      <frc-sim-gitpod-info></frc-sim-gitpod-info>
-      <frc-gyro></frc-gyro>
-      <frc-sim-robot-state></frc-sim-robot-state>
-      <frc-sim-fms></frc-sim-fms>
+    <frc-dashboard address-type="gitpod">
 
+        <frc-sim-gitpod-info></frc-sim-gitpod-info>
+        <div part="container">
+            <frc-robot-log></frc-robot-log>
+            <frc-sim-joystick source-provider="HALSim" source-key="joystick/0"></frc-sim-joystick>
+            <frc-sim-robot-state></frc-sim-robot-state>
+            <frc-sim-fms></frc-sim-fms>
+        </div>
     </frc-dashboard>
-    <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.min.js"></script>
+    <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.js"></script>
 
     <script>
-
 
         var socketOpen = false;
         var socket = null;
@@ -60,9 +67,41 @@
             }
         }
 
-        createSocket(message => {
-            console.log('robot message:', message);
-        }, () => {});
+
+        const { LitElement, html, css } = window.webbit;
+
+        class RobotLog extends LitElement {
+
+            static get styles() {
+                return css`
+                    :host {
+                        display: block;
+                    }
+                `;
+            }
+
+            static get properties() {
+                return {
+                    message: { type: String }
+                }
+            }
+            
+            constructor() {
+                super();
+                createSocket(message => {
+                    console.log('message:', message);
+                    this.message = message;
+                }, () => {});
+            }
+
+            render() {
+                return html`
+                    <frc-logger info="${this.message}"></frc-logger>
+                `;
+            }
+        }
+
+        customElements.define('frc-robot-log', RobotLog);    
 
     </script>
 
