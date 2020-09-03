@@ -12,7 +12,7 @@ ports:
 tasks:
   # - init: cd ./TestProject
   #   command: ./gradlew simulateJava
-  - init: node start.js
+  - command: node start.js
   - command: cd ./client; npm install; npm start
   - init: pip3 install pynetworktables2js
     command: python3 -m pynetworktables2js
