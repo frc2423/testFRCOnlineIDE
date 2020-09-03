@@ -5,6 +5,7 @@
     <style>
         div {
             display: flex;
+            flex-wrap: wrap;
         }
     </style>
   </head>
@@ -14,9 +15,11 @@
         <frc-sim-gitpod-info></frc-sim-gitpod-info>
         <div part="container">
             <frc-robot-log></frc-robot-log>
-            <frc-sim-joystick source-provider="HALSim" source-key="joystick/0"></frc-sim-joystick>
             <frc-sim-robot-state></frc-sim-robot-state>
-            <frc-sim-fms></frc-sim-fms>
+            <frc-sim-joystick source-provider="HALSim" source-key="joystick/0"></frc-sim-joystick>
+            <!-- <frc-sim-fms></frc-sim-fms>  -->
+            <frc-differential-drivebase></frc-differential-drivebase>
+            <frc-sim-pwms></frc-sim-pwms>
         </div>
     </frc-dashboard>
     <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.js"></script>
