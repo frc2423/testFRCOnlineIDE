@@ -12,11 +12,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.lib.Calibration.CalWrangler;
-import frc.lib.DataServer.CasseroleDataServer;
-import frc.lib.DataServer.Signal;
-import frc.lib.LoadMon.CasseroleRIOLoadMonitor;
-import frc.lib.WebServer.CasseroleWebServer;
+import edu.wpi.first.wpilibj.Joystick;
+
 
 import java.io.IOException;
 
@@ -30,20 +27,12 @@ import java.io.IOException;
  */
 public class Robot extends TimedRobot {
 
-    // Website utilities
-    CasseroleWebServer webserver;
-    CalWrangler wrangler;
-    CasseroleDataServer dataServer;
-    LoopTiming loopTiming;
-    CasseroleRIOLoadMonitor loadMon;
-
-    Signal teleopInitCounterSig;
-    int teleopInitCounter = 0;
 
     PWMVictorSPX motor1;
     PWMVictorSPX motor2;
     DifferentialDrive drive;
-    XboxController controller;
+    // XboxController controller;
+    Joystick controller;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -52,32 +41,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
 
-        /* Init website utilties */
-        webserver = new CasseroleWebServer();
-        wrangler = new CalWrangler();
-        dataServer = CasseroleDataServer.getInstance();
-        loadMon = new CasseroleRIOLoadMonitor();
-
-        teleopInitCounterSig = new Signal("Teleop Init Count", "count");
-
-        dataServer.startServer();
-        webserver.startServer();
-
-        try {
-            Runtime.getRuntime().exec("firefox localhost:5805");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-        System.out.println("Robot Init completed!");
-
         motor1 = new PWMVictorSPX(0);
         motor2 = new PWMVictorSPX(1);
 
         drive = new DifferentialDrive(motor1, motor2);
-        controller = new XboxController(0);
+        // controller = new XboxController(0);
+        controller = new Joystick(0);
     }
 
     @Override
@@ -96,8 +65,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-      System.out.println("auto periodic....");
-      telemetryUpdate();
+      drive.arcadeDrive(.5, .5);
   }
 
   /**
@@ -105,7 +73,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopInit() {
-    teleopInitCounter++;
     System.out.println("Teleop Init completed!");
   }
 
@@ -115,24 +82,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       System.out.println("y: " + controller.getY());
-      drive.arcadeDrive(controller.getY(), controller.getX());
-      telemetryUpdate();
+      drive.arcadeDrive(-controller.getY(), controller.getX());
   }
 
-  /**
-   * This function is called once when the robot is disabled.
-   */
-  @Override
-  public void disabledInit() {
-  }
-
-  /**
-   * This function is called periodically when disabled.
-   */
-  @Override
-  public void disabledPeriodic() {
-      telemetryUpdate();
-  }
 
   /**
    * This function is called once when test mode is enabled.
@@ -148,9 +100,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  void telemetryUpdate(){
-      double sampleTime = Timer.getFPGATimestamp()*1000;
-      teleopInitCounterSig.addSample(sampleTime, teleopInitCounter);
-
-  }
 }
