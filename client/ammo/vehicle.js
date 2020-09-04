@@ -9,6 +9,7 @@ class AmmoVehicle extends LitElement {
             :host {
                 display: block;
                 position: relative;
+                margin: 0 10px;
             }
 
             #speedometer {
@@ -134,7 +135,7 @@ class AmmoVehicle extends LitElement {
 
             scene = new THREE.Scene();
 
-            camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
+            camera = new THREE.PerspectiveCamera( 60, 1, 0.2, 2000 );
             camera.position.x = -4.84;
             camera.position.y = 4.39;
             camera.position.z = -35.11;
@@ -144,7 +145,7 @@ class AmmoVehicle extends LitElement {
             renderer = new THREE.WebGLRenderer({antialias:true});
             renderer.setClearColor( 0xbfd1e5 );
             renderer.setPixelRatio( window.devicePixelRatio );
-            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setSize( 500, 500 );
 
             var ambientLight = new THREE.AmbientLight( 0x404040 );
             scene.add( ambientLight );
@@ -183,10 +184,10 @@ class AmmoVehicle extends LitElement {
 
         const onWindowResize = () => {
 
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+            // camera.aspect = window.innerWidth / window.innerHeight;
+            // camera.updateProjectionMatrix();
 
-            renderer.setSize( window.innerWidth, window.innerHeight );
+            // renderer.setSize( window.innerWidth, window.innerHeight );
 
         }
 
@@ -504,10 +505,10 @@ class AmmoVehicle extends LitElement {
 
     onWindowResize() {
 
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+        // camera.aspect = window.innerWidth / window.innerHeight;
+        // camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        // renderer.setSize( window.innerWidth, window.innerHeight );
 
     }
 

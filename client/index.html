@@ -7,6 +7,10 @@
             display: flex;
             flex-wrap: wrap;
         }
+
+        div > div {
+            flex-direction: column;
+        }
     </style>
   </head>
   <body>
@@ -15,15 +19,13 @@
         <frc-sim-gitpod-info></frc-sim-gitpod-info>
         <div part="container">
             <frc-robot-log></frc-robot-log>
-            <frc-sim-robot-state></frc-sim-robot-state>
-            <frc-sim-joystick source-provider="HALSim" source-key="joystick/0"></frc-sim-joystick>
-            <!-- <frc-sim-fms></frc-sim-fms>  -->
-            <frc-differential-drivebase 
-                source-provider="NetworkTables" 
-                source-key="/liveWindow/ungrouped/differentialDrive1"
-            ></frc-differential-drivebase>
-            <frc-sim-pwms></frc-sim-pwms>
             <frc-ammo-vehicle></frc-ammo-vehicle>
+            <div>
+                <frc-sim-robot-state></frc-sim-robot-state>
+                <frc-sim-joystick source-provider="HALSim" source-key="joystick/0"></frc-sim-joystick>
+                <!-- <frc-sim-fms></frc-sim-fms>  -->
+                <frc-sim-pwms></frc-sim-pwms>
+            </div>
         </div>
     </frc-dashboard>
     <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.js"></script>
