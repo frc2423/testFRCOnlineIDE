@@ -33,6 +33,7 @@ class AmmoVehicle extends LitElement {
     constructor() {
         super();
         this.Ammo = null;
+        this.actions = {};
     }
 
     async firstUpdated() {
@@ -70,7 +71,6 @@ class AmmoVehicle extends LitElement {
         var maxNumObjects = 30;
 
         // Keybord actions
-        var actions = {};
         var keysActions = {
             "KeyW":'acceleration',
             "KeyS":'braking',
@@ -157,7 +157,7 @@ class AmmoVehicle extends LitElement {
 
         const keyup = (e) => {
             if(keysActions[e.code]) {
-                actions[keysActions[e.code]] = false;
+                this.actions[keysActions[e.code]] = false;
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
@@ -165,14 +165,14 @@ class AmmoVehicle extends LitElement {
         }
         const keydown = (e) => {
             if(keysActions[e.code]) {
-                actions[keysActions[e.code]] = true;
+                this.actions[keysActions[e.code]] = true;
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
         }
 
-        function createBox(pos, quat, w, l, h, mass, friction) {
+        const createBox = (pos, quat, w, l, h, mass, friction) => {
             var material = mass > 0 ? materialDynamic : materialStatic;
             var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
             var geometry = new Ammo.btBoxShape(new Ammo.btVector3(w * 0.5, l * 0.5, h * 0.5));
@@ -221,7 +221,7 @@ class AmmoVehicle extends LitElement {
             }
         }
 
-        function createWheelMesh(radius, width) {
+        const createWheelMesh = (radius, width) => {
             var t = new THREE.CylinderGeometry(radius, radius, width, 24, 1);
             t.rotateZ(Math.PI / 2);
             var mesh = new THREE.Mesh(t, materialInteractive);
@@ -230,14 +230,14 @@ class AmmoVehicle extends LitElement {
             return mesh;
         }
 
-        function createChassisMesh(w, l, h) {
+        const createChassisMesh = (w, l, h) => {
             var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
             var mesh = new THREE.Mesh(shape, materialInteractive);
             scene.add(mesh);
             return mesh;
         }
 
-        function createVehicle(pos, quat) {
+        const createVehicle = (pos, quat) => {
 
             // Vehicle contants
 
@@ -329,7 +329,7 @@ class AmmoVehicle extends LitElement {
             addWheel(false, new Ammo.btVector3(wheelHalfTrackBack, wheelAxisHeightBack, wheelAxisPositionBack), wheelRadiusBack, wheelWidthBack, BACK_RIGHT);
 
             // Sync keybord actions and physics and graphics
-            function sync(dt) {
+            const sync = (dt) => {
 
                 var speed = vehicle.getCurrentSpeedKmHour();
 
@@ -338,37 +338,31 @@ class AmmoVehicle extends LitElement {
                 breakingForce = 0;
                 engineForce = 0;
 
-                if (actions.acceleration) {
+                if (this.actions.acceleration) {
                     if (speed < -1)
                         breakingForce = maxBreakingForce;
                     else engineForce = maxEngineForce;
                 }
-                if (actions.braking) {
+                if (this.actions.braking) {
                     if (speed > 1)
                         breakingForce = maxBreakingForce;
                     else engineForce = -maxEngineForce / 2;
                 }
-                if (actions.left) {
+                if (this.actions.left) {
                     if (vehicleSteering < steeringClamp)
                         vehicleSteering += steeringIncrement;
                 }
+                else if (this.actions.right) {
+                    if (vehicleSteering > -steeringClamp)
+                        vehicleSteering -= steeringIncrement;
+                } else if (vehicleSteering < -steeringIncrement)
+                    vehicleSteering += steeringIncrement;
+                else if (vehicleSteering > steeringIncrement)
+                    vehicleSteering -= steeringIncrement;
                 else {
-                    if (actions.right) {
-                        if (vehicleSteering > -steeringClamp)
-                            vehicleSteering -= steeringIncrement;
-                    }
-                    else {
-                        if (vehicleSteering < -steeringIncrement)
-                            vehicleSteering += steeringIncrement;
-                        else {
-                            if (vehicleSteering > steeringIncrement)
-                                vehicleSteering -= steeringIncrement;
-                            else {
-                                vehicleSteering = 0;
-                            }
-                        }
-                    }
+                    vehicleSteering = 0;
                 }
+        
 
                 vehicle.applyEngineForce(engineForce, BACK_LEFT);
                 vehicle.applyEngineForce(engineForce, BACK_RIGHT);
@@ -402,7 +396,7 @@ class AmmoVehicle extends LitElement {
             syncList.push(sync);
         }
 
-        function createObjects() {
+        const createObjects = () => {
 
             createBox(new THREE.Vector3(0, -0.5, 0), ZERO_QUATERNION, 75, 1, 75, 0, 2);
 
@@ -440,7 +434,7 @@ class AmmoVehicle extends LitElement {
         return html`
            <div id="container"><br /><br /><br /><br /><br />Loading...</div>
             <div id="speedometer">0.0 km/h</div>
-            <div id="info">Ammo.js Raycast vehicle demo<br>Press W,A,S,D to move.</div>
+            
 
         `;
     }
