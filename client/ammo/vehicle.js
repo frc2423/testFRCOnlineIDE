@@ -40,6 +40,43 @@ class AmmoVehicle extends LitElement {
         this.rightSpeed = 0;
     }
 
+    getSpeed() {
+        return (this.leftSpeed + this.rightSpeed) / 2;
+    }
+
+    getRotation() {
+        return (this.rightSpeed - this.leftSpeed) / 2;
+    }
+
+    setActions() {
+
+        var keysActions = {
+            "KeyW":'acceleration',
+            "KeyS":'braking',
+            "KeyA":'left',
+            "KeyD":'right'
+        };
+
+        const speed = this.getSpeed();
+        const rotation = this.getRotation();
+
+        if (speed > 0) {
+            this.actions.acceleration = true;
+            this.actions.braking = false;
+        } else {
+            this.actions.acceleration = false;
+            this.actions.braking = true;
+        }
+
+        if (rotation < 0) {
+            this.actions.left = true;
+            this.actions.right = false;
+        } else {
+            this.actions.left = false;
+            this.actions.right = true;
+        }
+    }
+
     async firstUpdated() {
 
 
@@ -130,13 +167,13 @@ class AmmoVehicle extends LitElement {
             window.addEventListener( 'keyup', keyup);
 
             this.sourceProvider.subscribe('pwm/0/speed', value => {
-                console.log('left:', value);
                 this.leftSpeed = value;
+                this.setActions();
             });
 
             this.sourceProvider.subscribe('pwm/1/speed', value => {
-                console.log('right:', value);
-                this.rightSpeed = value;
+                this.rightSpeed = -value;
+                this.setActions();
             });
         }
 
@@ -355,30 +392,44 @@ class AmmoVehicle extends LitElement {
                 breakingForce = 0;
                 engineForce = 0;
 
+                const absSpeed = Math.abs(this.getSpeed());
+                const absRotation = Math.abs(this.getRotation());
+
+                const magSpeed = Math.sqrt(absSpeed * absSpeed + absRotation * absRotation);
+
                 if (this.actions.acceleration) {
                     if (speed < -1)
-                        breakingForce = maxBreakingForce;
-                    else engineForce = maxEngineForce;
+                        breakingForce = maxBreakingForce * absSpeed;
+                    else engineForce = maxEngineForce * absSpeed;
                 }
                 if (this.actions.braking) {
                     if (speed > 1)
-                        breakingForce = maxBreakingForce;
-                    else engineForce = -maxEngineForce / 2;
+                        breakingForce = maxBreakingForce * absSpeed;
+                    else engineForce = (-maxEngineForce / 2) * absSpeed;
                 }
                 if (this.actions.left) {
-                    if (vehicleSteering < steeringClamp)
-                        vehicleSteering += steeringIncrement;
+                    // if (vehicleSteering < steeringClamp)
+                    //     vehicleSteering += steeringIncrement;
+                    vehicleSteering = -steeringClamp * absRotation;
                 }
                 else if (this.actions.right) {
-                    if (vehicleSteering > -steeringClamp)
-                        vehicleSteering -= steeringIncrement;
-                } else if (vehicleSteering < -steeringIncrement)
-                    vehicleSteering += steeringIncrement;
-                else if (vehicleSteering > steeringIncrement)
-                    vehicleSteering -= steeringIncrement;
-                else {
-                    vehicleSteering = 0;
+                    // if (vehicleSteering > -steeringClamp)
+                    //     vehicleSteering -= steeringIncrement;
+                    vehicleSteering = steeringClamp * absRotation;
                 }
+                // } else if (vehicleSteering < -steeringIncrement)
+                //     vehicleSteering += steeringIncrement;
+                // else if (vehicleSteering > steeringIncrement)
+                //     vehicleSteering -= steeringIncrement;
+                // else {
+                //     vehicleSteering = 0;
+                // }
+
+                const body = vehicle.getRigidBody();
+
+                // console.log('body:', body.getLinearVelocity());
+
+                // body.setLinearVelocity(this.getSpeed() * 10);
         
 
                 vehicle.applyEngineForce(engineForce, BACK_LEFT);
