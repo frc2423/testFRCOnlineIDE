@@ -24,19 +24,26 @@ class AmmoVehicle extends LitElement {
         `;
     }
 
-    // static get properties() {
-    //     return {
-    //         message: { type: String }
-    //     }
-    // }
+    static get properties() {
+        return {
+            leftMotorSource: { type: String, attribute: 'left-motor-source' },
+            rightMotorSource: { type: String, attribute: 'right-motor-source' }
+        }
+    }
     
     constructor() {
         super();
         this.Ammo = null;
         this.actions = {};
+        this.sourceProvider = getSourceProvider('HALSim');
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
     }
 
     async firstUpdated() {
+
+
+
         this.Ammo = await Ammo();
 
         // Detects webgl
@@ -121,6 +128,16 @@ class AmmoVehicle extends LitElement {
             window.addEventListener( 'resize', onWindowResize, false );
             window.addEventListener( 'keydown', keydown);
             window.addEventListener( 'keyup', keyup);
+
+            this.sourceProvider.subscribe('pwm/0/speed', value => {
+                console.log('left:', value);
+                this.leftSpeed = value;
+            });
+
+            this.sourceProvider.subscribe('pwm/1/speed', value => {
+                console.log('right:', value);
+                this.rightSpeed = value;
+            });
         }
 
         const onWindowResize = () => {
