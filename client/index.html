@@ -23,9 +23,22 @@
                 source-key="/liveWindow/ungrouped/differentialDrive1"
             ></frc-differential-drivebase>
             <frc-sim-pwms></frc-sim-pwms>
+            <frc-ammo-vehicle></frc-ammo-vehicle>
         </div>
     </frc-dashboard>
     <script src="./node_modules/@frc-web-components/frc-web-components/build/frc-web-components.js"></script>
+
+    <script>
+        const { LitElement, html, css } = window.webbit;
+    </script>
+
+
+    <script src="./ammo/three/three.min.js"></script>
+    <script src="./ammo/three/OrbitControls.js"></script>
+    <script src="./ammo/three/Detector.js"></script>
+    <script src="./ammo/three/stats.min.js"></script>
+
+    <script src="./ammo/vehicle.js"></script>
 
     <script>
 
@@ -72,9 +85,6 @@
                 socket.send(msg);
             }
         }
-
-
-        const { LitElement, html, css } = window.webbit;
 
         class RobotLog extends LitElement {
 
