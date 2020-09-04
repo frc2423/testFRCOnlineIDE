@@ -1,5 +1,7 @@
 
 
+// https://github.com/bulletphysics/bullet3/blob/master/examples/pybullet/examples/racecar_differential.py
+
 class AmmoVehicle extends LitElement {
 
     static get styles() {
@@ -82,6 +84,8 @@ class AmmoVehicle extends LitElement {
 
 
         this.Ammo = await Ammo();
+
+        console.log('ammo:', this.Ammo);
 
         // Detects webgl
         if ( ! Detector.webgl ) {
@@ -430,6 +434,15 @@ class AmmoVehicle extends LitElement {
                 // console.log('body:', body.getLinearVelocity());
 
                 // body.setLinearVelocity(this.getSpeed() * 10);
+
+                // vehicle.applyEngineForce(maxEngineForce * -1, BACK_LEFT);
+                // vehicle.applyEngineForce(maxEngineForce * -1, FRONT_LEFT);
+
+                // vehicle.applyEngineForce(maxEngineForce * 1, BACK_RIGHT);
+                // vehicle.applyEngineForce(maxEngineForce * 1, FRONT_RIGHT);
+
+                // vehicle.setSteeringValue(0, FRONT_LEFT);
+                // vehicle.setSteeringValue(0, FRONT_RIGHT);
         
 
                 vehicle.applyEngineForce(engineForce, BACK_LEFT);
