@@ -140,7 +140,7 @@ class AmmoVehicle extends LitElement {
             camera.position.y = 4.39;
             camera.position.z = -35.11;
             camera.lookAt( new THREE.Vector3( 0.33, -0.40, 0.85 ) );
-            controls = new THREE.OrbitControls( camera );
+            // controls = new THREE.OrbitControls( camera );
 
             renderer = new THREE.WebGLRenderer({antialias:true});
             renderer.setClearColor( 0xbfd1e5 );
@@ -167,9 +167,6 @@ class AmmoVehicle extends LitElement {
             stats.domElement.style.top = '0px';
             container.appendChild( stats.domElement );
 
-            window.addEventListener( 'resize', onWindowResize, false );
-            window.addEventListener( 'keydown', keydown);
-            window.addEventListener( 'keyup', keyup);
 
             this.sourceProvider.subscribe('pwm/0/speed', value => {
                 this.leftSpeed = value;
@@ -180,15 +177,6 @@ class AmmoVehicle extends LitElement {
                 this.rightSpeed = -value;
                 this.setActions();
             });
-        }
-
-        const onWindowResize = () => {
-
-            // camera.aspect = window.innerWidth / window.innerHeight;
-            // camera.updateProjectionMatrix();
-
-            // renderer.setSize( window.innerWidth, window.innerHeight );
-
         }
 
         const initPhysics = () => {
@@ -208,27 +196,10 @@ class AmmoVehicle extends LitElement {
             for (var i = 0; i < syncList.length; i++)
                 syncList[i](dt);
             physicsWorld.stepSimulation( dt, 10 );
-            controls.update( dt );
+            // controls.update( dt );
             renderer.render( scene, camera );
             time += dt;
             stats.update();
-        }
-
-        const keyup = (e) => {
-            if(keysActions[e.code]) {
-                this.actions[keysActions[e.code]] = false;
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        }
-        const keydown = (e) => {
-            if(keysActions[e.code]) {
-                this.actions[keysActions[e.code]] = true;
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
         }
 
         const createBox = (pos, quat, w, l, h, mass, friction) => {
@@ -503,14 +474,6 @@ class AmmoVehicle extends LitElement {
     }
 
 
-    onWindowResize() {
-
-        // camera.aspect = window.innerWidth / window.innerHeight;
-        // camera.updateProjectionMatrix();
-
-        // renderer.setSize( window.innerWidth, window.innerHeight );
-
-    }
 
     render() {
         return html`
